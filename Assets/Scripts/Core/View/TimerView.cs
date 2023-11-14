@@ -29,10 +29,8 @@ namespace UIManagementDemo.Core.View
 
         private readonly CompositeDisposable _increaseButtonSubscriptions = new();
         private readonly CompositeDisposable _decreaseButtonSubscriptions = new();
-        
-        private int _currentStep;
-        private bool _isLongIncreaseActive;
-        private bool _isLongDecreaseActive;
+
+        private bool _isPointerDownActive;
 
         protected override void OnBind(CompositeDisposable disposables)
         {
@@ -53,102 +51,68 @@ namespace UIManagementDemo.Core.View
                 .AddTo(disposables);
 
             _increaseButtonSubscriptions.Add(_increaseButton.OnPointerUpAsObservable()
-                .Subscribe(_ => IncreaseOnPointerUp())
+                .Subscribe(_ => OnButtonPointerUp())
                 .AddTo(this));
             _increaseButtonSubscriptions.Add(_increaseButton.OnPointerClickAsObservable()
-                .Subscribe(_ => IncreaseOnPointerClick())
+                .Subscribe(_ => OnButtonPointerClick(ViewModel.IncreaseCommand))
                 .AddTo(disposables));
             _increaseButtonSubscriptions.Add(_increaseButton.OnLongPointerDownAsObservable()
-                .Subscribe(_ => IncreaseOnLongPointerDown())
+                .Subscribe(_ => OnButtonPointerDown(() => ViewModel.CanIncrease(), ViewModel.IncreaseCommand))
                 .AddTo(this));
 
             _decreaseButtonSubscriptions.Add(_decreaseButton.OnPointerUpAsObservable()
-                .Subscribe(_ => DecreaseOnPointerUp())
+                .Subscribe(_ => OnButtonPointerUp())
                 .AddTo(this));
             _decreaseButtonSubscriptions.Add(_decreaseButton.OnPointerClickAsObservable()
-                .Subscribe(_ => DecreaseOnPointerClick())
+                .Subscribe(_ => OnButtonPointerClick(ViewModel.DecreaseCommand))
                 .AddTo(disposables));
             _decreaseButtonSubscriptions.Add(_decreaseButton.OnLongPointerDownAsObservable()
-                .Subscribe(_ => DecreaseOnLongPointerDown())
+                .Subscribe(_ => OnButtonPointerDown(() => ViewModel.CanDecrease(), ViewModel.DecreaseCommand))
                 .AddTo(this));
-            
+
             _stopButton.OnClickAsObservable()
                 .Subscribe(_ => ViewModel.StopClickCommand.Execute())
                 .AddTo(disposables);
-            
+
             _resetButton.OnClickAsObservable()
                 .Subscribe(_ => ViewModel.ResetClickCommand.Execute())
                 .AddTo(disposables);
         }
 
-        private void IncreaseOnPointerClick()
+        private void UpdateTimerText(int time)
         {
-            Logger.DebugLog(this, "IncreaseButton OnPointerClick");
-            ViewModel.IncreaseCommand.Execute();
+            _timerText.text = TimeSpan.FromSeconds(time).ToMinutesAndSeconds();
         }
 
-        private async void IncreaseOnLongPointerDown()
+        private void OnButtonPointerUp()
         {
-            Logger.DebugLog(this, "IncreaseButton LONG OnPointerDown");
+            _isPointerDownActive = false;
+        }
 
-            _currentStep = _timerControlConfig.DefaultStep;
-            _isLongIncreaseActive = true;
+        private void OnButtonPointerClick(ReactiveCommand command)
+        {
+            command.Execute();
+        }
 
-            while (ViewModel.CanIncrease() && _isLongIncreaseActive)
+        private async void OnButtonPointerDown(Func<bool> canExecute, ReactiveCommand command)
+        {
+            _isPointerDownActive = true;
+            var currentStep = _timerControlConfig.DefaultStep;
+
+            while (canExecute() && _isPointerDownActive)
             {
                 await UniTask.Delay(_timerControlConfig.MillisecondsToIncreaseStep);
 
-                if (_currentStep < _timerControlConfig.MaxStep)
+                if (currentStep < _timerControlConfig.MaxStep)
                 {
-                    _currentStep++;
+                    currentStep++;
                 }
 
-                for (var i = 0; i < _currentStep; i++)
+                for (var i = 0; i < currentStep; i++)
                 {
-                    ViewModel.IncreaseCommand.Execute();
-                }
-            }
-        }
-
-        private void IncreaseOnPointerUp()
-        {
-            Logger.DebugLog(this, "IncreaseButton OnPointerUp");
-            _isLongIncreaseActive = false;
-        }
-
-        private void DecreaseOnPointerClick()
-        {
-            Logger.DebugLog(this, "DecreaseButton OnPointerClick");
-            ViewModel.DecreaseCommand.Execute();
-        }
-
-        private async void DecreaseOnLongPointerDown()
-        {
-            Logger.DebugLog(this, "DecreaseButton LONG OnPointerDown");
-
-            _currentStep = _timerControlConfig.DefaultStep;
-            _isLongDecreaseActive = true;
-
-            while (ViewModel.CanIncrease() && _isLongDecreaseActive)
-            {
-                await UniTask.Delay(_timerControlConfig.MillisecondsToIncreaseStep);
-
-                if (_currentStep < _timerControlConfig.MaxStep)
-                {
-                    _currentStep++;
-                }
-                
-                for (var i = 0; i < _currentStep; i++)
-                {
-                    ViewModel.IncreaseCommand.Execute();
+                    command.Execute();
                 }
             }
-        }
-
-        private void DecreaseOnPointerUp()
-        {
-            Logger.DebugLog(this, "DecreaseButton OnPointerUp");
-            _isLongDecreaseActive = false;
         }
 
         private void RemoveSubscriptions()
@@ -165,11 +129,6 @@ namespace UIManagementDemo.Core.View
 
             _increaseButtonSubscriptions.Clear();
             _decreaseButtonSubscriptions.Clear();
-        }
-
-        private void UpdateTimerText(int time)
-        {
-            _timerText.text = TimeSpan.FromSeconds(time).ToMinutesAndSeconds();
         }
     }
 }
