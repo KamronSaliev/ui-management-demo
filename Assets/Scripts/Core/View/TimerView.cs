@@ -81,7 +81,7 @@ namespace UIManagementDemo.Core.View
 
         private void UpdateTimerText(int time)
         {
-            _timerText.text = TimeSpan.FromSeconds(time).ToMinutesAndSeconds();
+            _timerText.text = TimeSpan.FromSeconds(time).ToHoursMinutesSeconds();
         }
 
         private void OnButtonPointerUp()
