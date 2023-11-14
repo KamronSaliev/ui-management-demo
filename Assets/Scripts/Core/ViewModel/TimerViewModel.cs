@@ -21,6 +21,7 @@ namespace UIManagementDemo.Core.ViewModel
         public IReadOnlyReactiveProperty<int> Time => _time.ToReadOnlyReactiveProperty();
 
         private readonly int _id;
+        private readonly TimerSpawnerView _timerSpawnerView;
         private readonly TimerCallButtonViewModel _timerCallButtonViewModel;
         private readonly ITimerView _timerView;
         private readonly TimerModel _model;
@@ -30,12 +31,14 @@ namespace UIManagementDemo.Core.ViewModel
         public TimerViewModel
         (
             int id,
+            TimerSpawnerView timerSpawnerView,
             TimerCallButtonViewModel timerCallButtonViewModel,
             ITimerView timerView,
             TimerModel model
         )
         {
             _id = id;
+            _timerSpawnerView = timerSpawnerView;
             _timerCallButtonViewModel = timerCallButtonViewModel;
             _timerView = timerView;
             _model = model;
@@ -88,6 +91,7 @@ namespace UIManagementDemo.Core.ViewModel
 
             _model.UpdateState(true);
             _timerView.Hide();
+            _timerSpawnerView.Show();
             _timerCallButtonViewModel.MakeActive();
         }
 
@@ -96,6 +100,7 @@ namespace UIManagementDemo.Core.ViewModel
             Logger.DebugLog(this, $"Back Timer{_id}");
 
             _timerView.Hide();
+            _timerSpawnerView.Show();
         }
 
         private void OnIncrease(Unit unit)

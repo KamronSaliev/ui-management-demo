@@ -4,7 +4,6 @@ using UIManagementDemo.Core.ViewModel;
 using UIManagementDemo.SaveSystem;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 using Logger = Utilities.Logger;
 
@@ -12,7 +11,8 @@ namespace UIManagementDemo.Core.View
 {
     public class TimerSpawnerView : BindableView<TimerSpawnerViewModel>
     {
-        [SerializeField] private Button _spawnButton;
+        [SerializeField] private ShowHideButtonsContainer _showHideButtonsContainer;
+        [SerializeField] private SpawnButtonView _spawnButtonView;
         [SerializeField] private string _nameMask = "Таймер {0}";
 
         // TODO: refactor, maybe merge
@@ -46,8 +46,12 @@ namespace UIManagementDemo.Core.View
         {
             Logger.DebugLog(this, "OnBind");
 
-            _spawnButton.OnClickAsObservable()
-                .Subscribe(_ => Spawn(new TimerData(CurrentId + 1)))
+            _spawnButtonView.Button.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    var timerCallButtonView = Spawn(new TimerData(CurrentId + 1));
+                    _showHideButtonsContainer.Add(timerCallButtonView.ShowHideButton, true);
+                })
                 .AddTo(disposables);
         }
 
@@ -57,21 +61,25 @@ namespace UIManagementDemo.Core.View
 
             Logger.DebugLogWarning(this, $"CurrentSaveData: {_currentSaveData.TimerData.Count}");
 
-            // TODO: refactor
+            _showHideButtonsContainer.Add(_spawnButtonView.ShowHideButton);
             if (_currentSaveData.TimerData.Count == 0)
             {
                 for (var i = 0; i < DefaultTimerCallButtonCount; i++)
                 {
-                    Spawn(new TimerData(i + 1));
+                    var timerCallButtonView = Spawn(new TimerData(i + 1));
+                    _showHideButtonsContainer.Add(timerCallButtonView.ShowHideButton);
                 }
             }
             else
             {
                 for (var i = 0; i < _currentSaveData.TimerData.Count; i++)
                 {
-                    Spawn(_currentSaveData.TimerData[i]);
+                    var timerCallButtonView = Spawn(_currentSaveData.TimerData[i]);
+                    _showHideButtonsContainer.Add(timerCallButtonView.ShowHideButton);
                 }
             }
+
+            _showHideButtonsContainer.Show();
         }
 
         private void OnApplicationQuit()
@@ -105,7 +113,7 @@ namespace UIManagementDemo.Core.View
             return _timerCallButtonViewModels.GetValueOrDefault(id);
         }
 
-        private void Spawn(TimerData timerData)
+        private TimerCallButtonView Spawn(TimerData timerData)
         {
             var id = timerData.Id;
             var time = timerData.Time;
@@ -129,6 +137,7 @@ namespace UIManagementDemo.Core.View
             var timerViewModel = new TimerViewModel
             (
                 id,
+                this,
                 timerCallButtonViewModel,
                 _timerView,
                 timerModel
@@ -138,6 +147,18 @@ namespace UIManagementDemo.Core.View
             _timerViewModels.TryAdd(id, timerViewModel);
 
             Logger.DebugLog(this, $"Spawned {id} {time} {state}");
+
+            return timerCallButtonView;
+        }
+
+        public void Show()
+        {
+            _showHideButtonsContainer.Show();
+        }
+
+        public void Hide()
+        {
+            _showHideButtonsContainer.Hide();
         }
     }
 }

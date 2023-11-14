@@ -63,6 +63,7 @@ namespace UIManagementDemo.Core.ViewModel
         {
             Logger.DebugLogWarning(this, $"OnClick {_model.ButtonText}");
 
+            _timerSpawnerView.Hide();
             _timerView.Show();
 
             _timerView.ChangeViewModel(_timerSpawnerView.GetTimerViewModelById(_id)); // TODO: refactor
