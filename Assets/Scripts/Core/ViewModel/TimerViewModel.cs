@@ -11,9 +11,9 @@ namespace UIManagementDemo.Core.ViewModel
     public class TimerViewModel : DisposableObject, IInitializable
     {
         public ReactiveCommand StartClickCommand { get; } = new();
-        public ReactiveCommand IncreaseClickCommand { get; } = new();
-        public ReactiveCommand DecreaseClickCommand { get; } = new();
         public ReactiveCommand BackClickCommand { get; } = new();
+        public ReactiveCommand IncreaseCommand { get; } = new();
+        public ReactiveCommand DecreaseCommand { get; } = new();
 
         private readonly ReactiveProperty<int> _time = new();
         public IReadOnlyReactiveProperty<int> Time => _time.ToReadOnlyReactiveProperty();
@@ -46,19 +46,19 @@ namespace UIManagementDemo.Core.ViewModel
             StartClickCommand
                 .Subscribe(OnStartClick)
                 .AddTo(this);
-
-            IncreaseClickCommand
-                .Subscribe(OnIncreaseClick)
-                .AddTo(this);
-
-            DecreaseClickCommand
-                .Subscribe(OnDecreaseClick)
-                .AddTo(this);
-
+            
             BackClickCommand
                 .Subscribe(OnBackClick)
                 .AddTo(this);
 
+            IncreaseCommand
+                .Subscribe(OnIncrease)
+                .AddTo(this);
+
+            DecreaseCommand
+                .Subscribe(OnDecrease)
+                .AddTo(this);
+         
             Observable.Interval(TimeSpan.FromSeconds(DefaultTimeSpan))
                 .Subscribe(_ => { OnEveryTimerTick(); })
                 .AddTo(this);
@@ -80,28 +80,52 @@ namespace UIManagementDemo.Core.ViewModel
             _timerView.Hide();
             _timerCallButtonViewModel.MakeActive();
         }
-
-        private void OnIncreaseClick(Unit unit)
+        
+        private void OnBackClick(Unit unit)
         {
+            Logger.DebugLog(this, $"Back Timer{_id}");
+
+            _timerView.Hide();
+        }
+
+        private void OnIncrease(Unit unit)
+        {
+            Logger.DebugLog(this, $"Increase Called for Timer{_id}");
+            
+            if (!CanIncrease())
+            {
+                return;
+            }
+            
             _model.UpdateTime(DefaultTimeSpan);
             _time.Value = _model.Time;
 
             Logger.DebugLog(this, $"Increased Timer{_id} {_model.Time}");
         }
 
-        private void OnDecreaseClick(Unit unit)
+        private void OnDecrease(Unit unit)
         {
+            Logger.DebugLog(this, $"Decrease Called for Timer{_id}");
+            
+            if (!CanDecrease())
+            {
+                return;
+            }
+            
             _model.UpdateTime(-DefaultTimeSpan);
             _time.Value = _model.Time;
 
             Logger.DebugLog(this, $"Decreased Timer{_id} {_model.Time}");
         }
-
-        private void OnBackClick(Unit unit)
+        
+        public bool CanIncrease()
         {
-            Logger.DebugLog(this, $"Back Timer{_id}");
+            return _model.Time < int.MaxValue; 
+        }
 
-            _timerView.Hide();
+        public bool CanDecrease()
+        {
+            return _model.Time > int.MinValue;
         }
 
         private void OnEveryTimerTick()
