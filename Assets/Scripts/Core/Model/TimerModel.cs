@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 namespace UIManagementDemo.Core.Model
@@ -7,7 +8,7 @@ namespace UIManagementDemo.Core.Model
         public int Id { get; private set; }
         public int Time { get; private set; }
         public bool State { get; private set; }
-
+        
         public TimerModel(int id, int time, bool state)
         {
             Id = id;
@@ -24,6 +25,11 @@ namespace UIManagementDemo.Core.Model
         public void UpdateState(bool state)
         {
             State = state;
+        }
+        
+        public void ResetTime()
+        {
+            Time = 0;
         }
     }
 }
