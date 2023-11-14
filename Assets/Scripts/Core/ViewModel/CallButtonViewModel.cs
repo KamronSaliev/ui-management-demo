@@ -7,7 +7,7 @@ using Zenject;
 
 namespace UIManagementDemo.Core.ViewModel
 {
-    public class TimerCallButtonViewModel : DisposableObject, IInitializable
+    public class CallButtonViewModel : DisposableObject, IInitializable
     {
         public ReactiveCommand ClickCommand { get; } = new();
 
@@ -17,18 +17,18 @@ namespace UIManagementDemo.Core.ViewModel
         private readonly int _id;
         private readonly TimerSpawnerView _timerSpawnerView;
         private readonly TimerView _timerView;
-        private readonly TimerCallButtonView _view;
+        private readonly CallButtonView _view;
         private readonly TimerModel _timerModel;
-        private readonly TimerCallButtonModel _model;
+        private readonly CallButtonModel _model;
 
-        public TimerCallButtonViewModel
+        public CallButtonViewModel
         (
             int id,
             TimerSpawnerView timerSpawnerView,
             TimerView timerView,
-            TimerCallButtonView view,
+            CallButtonView view,
             TimerModel timerModel,
-            TimerCallButtonModel model
+            CallButtonModel model
         )
         {
             _id = id;
@@ -38,7 +38,7 @@ namespace UIManagementDemo.Core.ViewModel
             _timerModel = timerModel;
             _model = model;
 
-            _buttonText.Value = model.ButtonText;
+            _buttonText.Value = model.ButtonName;
         }
 
         public void Initialize()
@@ -61,7 +61,7 @@ namespace UIManagementDemo.Core.ViewModel
 
         private void OnClick(Unit unit)
         {
-            Logger.DebugLogWarning(this, $"OnClick {_model.ButtonText}");
+            Logger.DebugLogWarning(this, $"OnClick {_model.ButtonName}");
 
             _timerSpawnerView.Hide();
             _timerView.Show();
@@ -71,20 +71,16 @@ namespace UIManagementDemo.Core.ViewModel
 
         public void MakeActive()
         {
-            Logger.DebugLogWarning(this, $"MakeActive {_model.ButtonText}");
+            Logger.DebugLogWarning(this, $"MakeActive {_model.ButtonName}");
 
-            _view.ColorButtonOnActive();
+            _view.ColorButton.ColorOnActive();
         }
 
         public void MakeInactive()
         {
-            Logger.DebugLogWarning(this, $"MakeInactive {_model.ButtonText}");
+            Logger.DebugLogWarning(this, $"MakeInactive {_model.ButtonName}");
 
-            _view.ColorButtonOnInactive();
-        }
-
-        public class Factory : PlaceholderFactory<TimerCallButtonViewModel>
-        {
+            _view.ColorButton.ColorOnInactive();
         }
     }
 }

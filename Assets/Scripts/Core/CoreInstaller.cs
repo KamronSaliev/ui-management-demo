@@ -9,7 +9,7 @@ namespace UIManagementDemo.Core
     public class CoreInstaller : MonoInstaller
     {
         [SerializeField] private TimerSpawnerView _timerButtonSpawnerView;
-        [SerializeField] private TimerCallButtonView _timerCallButtonPrefab;
+        [SerializeField] private CallButtonView _callButtonPrefab;
         [SerializeField] private TimerView _timerView;
         [SerializeField] private ShowHideButtonsContainerConfig _showHideButtonsContainerConfig;
 
@@ -26,8 +26,8 @@ namespace UIManagementDemo.Core
                 .FromInstance(_timerView)
                 .AsSingle();
 
-            Container.BindFactory<TimerCallButtonView, TimerCallButtonView.Factory>()
-                .FromComponentInNewPrefab(_timerCallButtonPrefab)
+            Container.BindFactory<CallButtonView, CallButtonView.Factory>()
+                .FromComponentInNewPrefab(_callButtonPrefab)
                 .UnderTransform(_timerButtonSpawnerView.transform);
 
             Container.BindInstance(_showHideButtonsContainerConfig).AsSingle();

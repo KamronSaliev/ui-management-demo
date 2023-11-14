@@ -22,7 +22,7 @@ namespace UIManagementDemo.Core.ViewModel
 
         private readonly int _id;
         private readonly TimerSpawnerView _timerSpawnerView;
-        private readonly TimerCallButtonViewModel _timerCallButtonViewModel;
+        private readonly CallButtonViewModel _callButtonViewModel;
         private readonly ITimerView _timerView;
         private readonly TimerModel _model;
 
@@ -32,14 +32,14 @@ namespace UIManagementDemo.Core.ViewModel
         (
             int id,
             TimerSpawnerView timerSpawnerView,
-            TimerCallButtonViewModel timerCallButtonViewModel,
+            CallButtonViewModel callButtonViewModel,
             ITimerView timerView,
             TimerModel model
         )
         {
             _id = id;
             _timerSpawnerView = timerSpawnerView;
-            _timerCallButtonViewModel = timerCallButtonViewModel;
+            _callButtonViewModel = callButtonViewModel;
             _timerView = timerView;
             _model = model;
         }
@@ -92,7 +92,7 @@ namespace UIManagementDemo.Core.ViewModel
             _model.UpdateState(true);
             _timerView.Hide();
             _timerSpawnerView.Show();
-            _timerCallButtonViewModel.MakeActive();
+            _callButtonViewModel.MakeActive();
         }
 
         private void OnBackClick(Unit unit)
@@ -148,7 +148,7 @@ namespace UIManagementDemo.Core.ViewModel
             Logger.DebugLog(this, $"Stop Timer{_id}");
 
             _model.UpdateState(false);
-            _timerCallButtonViewModel.MakeInactive();
+            _callButtonViewModel.MakeInactive();
         }
 
         private void OnResetClick(Unit unit)
@@ -157,7 +157,7 @@ namespace UIManagementDemo.Core.ViewModel
 
             _model.UpdateState(false);
             _model.ResetTime();
-            _timerCallButtonViewModel.MakeInactive();
+            _callButtonViewModel.MakeInactive();
             _time.Value = _model.Time;
         }
 
@@ -175,7 +175,7 @@ namespace UIManagementDemo.Core.ViewModel
             {
                 Logger.DebugLogWarning(this, $"Timer{_id} Expired");
                 _model.UpdateState(false);
-                _timerCallButtonViewModel.MakeInactive();
+                _callButtonViewModel.MakeInactive();
             }
         }
     }

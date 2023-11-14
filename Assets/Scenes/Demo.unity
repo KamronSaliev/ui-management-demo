@@ -914,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timerButtonSpawnerView: {fileID: 688883705}
-  _timerCallButtonPrefab: {fileID: 5279612092868439171, guid: c4e7ed51d11244e44aaddf01dec61f7e, type: 3}
+  _callButtonPrefab: {fileID: 5279612092868439171, guid: c4e7ed51d11244e44aaddf01dec61f7e, type: 3}
   _timerView: {fileID: 167107646553023512}
   _showHideButtonsContainerConfig: {fileID: 11400000, guid: 299887a75bbc1429898b9b5110d46d2f, type: 2}
 --- !u!1 &1982281357

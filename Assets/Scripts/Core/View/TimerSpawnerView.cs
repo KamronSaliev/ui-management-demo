@@ -17,9 +17,9 @@ namespace UIManagementDemo.Core.View
         // TODO: refactor, maybe merge
         private readonly Dictionary<int, TimerModel> _timerModels = new();
         private readonly Dictionary<int, TimerViewModel> _timerViewModels = new();
-        private readonly Dictionary<int, TimerCallButtonViewModel> _timerCallButtonViewModels = new();
+        private readonly Dictionary<int, CallButtonViewModel> _timerCallButtonViewModels = new();
 
-        private TimerCallButtonView.Factory _timerCallButtonViewFactory;
+        private CallButtonView.Factory _timerCallButtonViewFactory;
         private TimerView _timerView;
         private IShowHideButtonsContainer _showHideButtonsContainer;
         private ISaveSystem _saveSystem;
@@ -32,7 +32,7 @@ namespace UIManagementDemo.Core.View
         [Inject]
         public void Construct
         (
-            TimerCallButtonView.Factory timerCallButtonViewFactory,
+            CallButtonView.Factory timerCallButtonViewFactory,
             TimerView timerView,
             IShowHideButtonsContainer showHideButtonsContainer,
             ISaveSystem saveSystem
@@ -110,12 +110,12 @@ namespace UIManagementDemo.Core.View
         }
 
         // TODO: refactor
-        public TimerCallButtonViewModel GetCallButtonViewModelById(int id)
+        public CallButtonViewModel GetCallButtonViewModelById(int id)
         {
             return _timerCallButtonViewModels.GetValueOrDefault(id);
         }
 
-        private TimerCallButtonView Spawn(TimerData timerData)
+        private CallButtonView Spawn(TimerData timerData)
         {
             var id = timerData.Id;
             var time = timerData.Time;
@@ -123,14 +123,14 @@ namespace UIManagementDemo.Core.View
             var timerModel = new TimerModel(id, time, state);
 
             var timerCallButtonView = _timerCallButtonViewFactory.Create();
-            var timerCallButtonViewModel = new TimerCallButtonViewModel
+            var timerCallButtonViewModel = new CallButtonViewModel
             (
                 id,
                 this,
                 _timerView,
                 timerCallButtonView,
                 timerModel,
-                new TimerCallButtonModel(string.Format(_nameMask, id))
+                new CallButtonModel(string.Format(_nameMask, id))
             );
             timerCallButtonViewModel.Initialize();
             timerCallButtonView.BindTo(timerCallButtonViewModel).AddTo(this);
