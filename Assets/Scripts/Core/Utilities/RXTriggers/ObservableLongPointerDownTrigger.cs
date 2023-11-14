@@ -8,7 +8,7 @@ namespace Utilities.RXTriggers
 {
     public class ObservableLongPointerDownTrigger : ObservableTriggerBase, IPointerDownHandler, IPointerUpHandler
     {
-        private const float DefaultInterval = 1.0f;
+        private const float DefaultInterval = 0.5f;
         
         private Subject<PointerEventData> _onLongPointerDown;
         private float _raiseTime;
