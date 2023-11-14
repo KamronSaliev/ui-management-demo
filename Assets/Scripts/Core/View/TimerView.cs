@@ -1,6 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
+using UIManagementDemo.Core.Config;
 using UIManagementDemo.Core.ViewModel;
 using UniRx;
 using UniRx.Triggers;
@@ -12,8 +12,10 @@ using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Core.View
 {
-    public class TimerView : BindableView<TimerViewModel>, ITimerView
+    public class TimerView : BindableView<TimerViewModel>
     {
+        public ShowHideTimer ShowHideTimer => _showHideTimer;
+
         [SerializeField] private Text _timerText;
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _increaseButton;
@@ -21,27 +23,16 @@ namespace UIManagementDemo.Core.View
         [SerializeField] private Button _backButton;
         [SerializeField] private Button _stopButton;
         [SerializeField] private Button _resetButton;
-        [SerializeField] private float _tweenDuration = 0.5f;
 
-        private Vector3 _initialScale;
-        private Vector3 _defaultScale;
-        private Tween _tween;
-
-        private const int DefaultStep = 1;
-        private const int MaxStep = 10;
-        private const int MillisecondsToIncreaseStep = 100;
+        [SerializeField] private ShowHideTimer _showHideTimer;
+        [SerializeField] private TimerControlConfig _timerControlConfig;
 
         private readonly CompositeDisposable _increaseButtonSubscriptions = new();
         private readonly CompositeDisposable _decreaseButtonSubscriptions = new();
+        
         private int _currentStep;
         private bool _isLongIncreaseActive;
         private bool _isLongDecreaseActive;
-
-        private void Start()
-        {
-            _defaultScale = transform.localScale;
-            transform.localScale = _initialScale;
-        }
 
         protected override void OnBind(CompositeDisposable disposables)
         {
@@ -100,14 +91,14 @@ namespace UIManagementDemo.Core.View
         {
             Logger.DebugLog(this, "IncreaseButton LONG OnPointerDown");
 
-            _currentStep = DefaultStep;
+            _currentStep = _timerControlConfig.DefaultStep;
             _isLongIncreaseActive = true;
 
             while (ViewModel.CanIncrease() && _isLongIncreaseActive)
             {
-                await UniTask.Delay(MillisecondsToIncreaseStep);
+                await UniTask.Delay(_timerControlConfig.MillisecondsToIncreaseStep);
 
-                if (_currentStep < MaxStep)
+                if (_currentStep < _timerControlConfig.MaxStep)
                 {
                     _currentStep++;
                 }
@@ -135,14 +126,14 @@ namespace UIManagementDemo.Core.View
         {
             Logger.DebugLog(this, "DecreaseButton LONG OnPointerDown");
 
-            _currentStep = DefaultStep; // TODO: fix step increase
+            _currentStep = _timerControlConfig.DefaultStep;
             _isLongDecreaseActive = true;
 
             while (ViewModel.CanIncrease() && _isLongDecreaseActive)
             {
-                await UniTask.Delay(MillisecondsToIncreaseStep);
+                await UniTask.Delay(_timerControlConfig.MillisecondsToIncreaseStep);
 
-                if (_currentStep < MaxStep)
+                if (_currentStep < _timerControlConfig.MaxStep)
                 {
                     _currentStep++;
                 }
@@ -179,22 +170,6 @@ namespace UIManagementDemo.Core.View
         private void UpdateTimerText(int time)
         {
             _timerText.text = TimeSpan.FromSeconds(time).ToMinutesAndSeconds();
-        }
-
-        public void Show()
-        {
-            Logger.DebugLog(this, "Show");
-
-            _tween?.Kill();
-            _tween = transform.DOScale(_defaultScale, _tweenDuration);
-        }
-
-        public void Hide()
-        {
-            Logger.DebugLog(this, "Hide");
-
-            _tween?.Kill();
-            _tween = transform.DOScale(_initialScale, _tweenDuration);
         }
     }
 }

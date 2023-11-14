@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 485287c142c14180aadc7d94d455ed96, type: 3}
-  m_Name: ShowHideButtonConfig
+  m_Name: CallButtonShowHideConfig
   m_EditorClassIdentifier: 
-  _showPosition: {x: 0, y: 0, z: 0}
-  _hidePosition: {x: -700, y: 0, z: 0}
+  _onShowParameter: {x: 0, y: 0, z: 0}
+  _onHideParameter: {x: -700, y: 0, z: 0}
   _tweenDuration: 0.5

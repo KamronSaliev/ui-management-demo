@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UIManagementDemo.Core.Model;
 using UIManagementDemo.Core.View;
 using UniRx;
@@ -23,7 +24,7 @@ namespace UIManagementDemo.Core.ViewModel
         private readonly int _id;
         private readonly TimerSpawnerView _timerSpawnerView;
         private readonly CallButtonViewModel _callButtonViewModel;
-        private readonly ITimerView _timerView;
+        private readonly TimerView _timerView;
         private readonly TimerModel _model;
 
         private const int DefaultTimeSpan = 1;
@@ -33,7 +34,7 @@ namespace UIManagementDemo.Core.ViewModel
             int id,
             TimerSpawnerView timerSpawnerView,
             CallButtonViewModel callButtonViewModel,
-            ITimerView timerView,
+            TimerView timerView,
             TimerModel model
         )
         {
@@ -90,7 +91,7 @@ namespace UIManagementDemo.Core.ViewModel
             }
 
             _model.UpdateState(true);
-            _timerView.Hide();
+            _timerView.ShowHideTimer.Hide().Forget();
             _timerSpawnerView.Show();
             _callButtonViewModel.MakeActive();
         }
@@ -99,7 +100,7 @@ namespace UIManagementDemo.Core.ViewModel
         {
             Logger.DebugLog(this, $"Back Timer{_id}");
 
-            _timerView.Hide();
+            _timerView.ShowHideTimer.Hide().Forget();
             _timerSpawnerView.Show();
         }
 

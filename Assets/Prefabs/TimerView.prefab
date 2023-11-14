@@ -173,6 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2451469021042864932}
   - component: {fileID: 2451469021042864933}
+  - component: {fileID: 5714033559789218822}
   m_Layer: 5
   m_Name: TimerView
   m_TagString: Untagged
@@ -220,7 +221,22 @@ MonoBehaviour:
   _backButton: {fileID: 2518519126462207042}
   _stopButton: {fileID: 212178656304376328}
   _resetButton: {fileID: 8061678718339337620}
-  _tweenDuration: 0.5
+  _showHideTimer: {fileID: 5714033559789218822}
+  _timerControlConfig: {fileID: 11400000, guid: 1bcd83a346d5747f385f86db3abe0482, type: 2}
+--- !u!114 &5714033559789218822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2451469021042864935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8410971751da47b586f51d2a61ab23ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetTransform: {fileID: 2451469021042864932}
+  _config: {fileID: 11400000, guid: bb0ad99b0c03e4c328a9d8c827ccf473, type: 2}
 --- !u!1 &2451469021052203971
 GameObject:
   m_ObjectHideFlags: 0

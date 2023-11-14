@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UIManagementDemo.Core.Model;
 using UIManagementDemo.Core.View;
 using UniRx;
@@ -64,7 +65,7 @@ namespace UIManagementDemo.Core.ViewModel
             Logger.DebugLogWarning(this, $"OnClick {_model.ButtonName}");
 
             _timerSpawnerView.Hide();
-            _timerView.Show();
+            _timerView.ShowHideTimer.Show().Forget();
 
             _timerView.ChangeViewModel(_timerSpawnerView.GetTimerViewModelById(_id)); // TODO: refactor
         }
