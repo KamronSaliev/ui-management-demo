@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3403386441366886724}
   - component: {fileID: 3436790168589558744}
   - component: {fileID: 4532373233127188476}
-  - component: {fileID: 5870435312537620697}
   m_Layer: 5
   m_Name: TimerCallButton
   m_TagString: Untagged
@@ -123,19 +122,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5870435312537620697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1715845572624750045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6dce21a11f44b19463fe09a74884a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 4532373233127188476}
 --- !u!1 &5279612092868439197
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5279612092868439196}
   - component: {fileID: 5279612092868439171}
+  - component: {fileID: 1009585502660772952}
   m_Layer: 5
   m_Name: TimerCallButtonView
   m_TagString: Untagged
@@ -187,12 +174,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 4532373233127188476}
-  _showHideButton: {fileID: 5870435312537620697}
+  _showHideButton: {fileID: 1009585502660772952}
   _text: {fileID: 596965721369720262}
   _image: {fileID: 3436790168589558744}
   _colorOnInactive: {r: 1, g: 1, b: 1, a: 1}
   _colorOnActive: {r: 1, g: 1, b: 0, a: 1}
   _colorDuration: 0.5
+--- !u!114 &1009585502660772952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5279612092868439197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6dce21a11f44b19463fe09a74884a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 4532373233127188476}
+  _config: {fileID: 11400000, guid: c2074936c73194858ad7e7e629bca6ff, type: 2}
 --- !u!1 &7051029452237869761
 GameObject:
   m_ObjectHideFlags: 0
