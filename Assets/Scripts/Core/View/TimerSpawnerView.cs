@@ -11,7 +11,6 @@ namespace UIManagementDemo.Core.View
 {
     public class TimerSpawnerView : BindableView<TimerSpawnerViewModel>
     {
-        [SerializeField] private ShowHideButtonsContainer _showHideButtonsContainer;
         [SerializeField] private SpawnButtonView _spawnButtonView;
         [SerializeField] private string _nameMask = "Таймер {0}";
 
@@ -22,6 +21,7 @@ namespace UIManagementDemo.Core.View
 
         private TimerCallButtonView.Factory _timerCallButtonViewFactory;
         private TimerView _timerView;
+        private IShowHideButtonsContainer _showHideButtonsContainer;
         private ISaveSystem _saveSystem;
 
         private SaveData _currentSaveData;
@@ -34,11 +34,13 @@ namespace UIManagementDemo.Core.View
         (
             TimerCallButtonView.Factory timerCallButtonViewFactory,
             TimerView timerView,
+            IShowHideButtonsContainer showHideButtonsContainer,
             ISaveSystem saveSystem
         )
         {
             _timerCallButtonViewFactory = timerCallButtonViewFactory;
             _timerView = timerView;
+            _showHideButtonsContainer = showHideButtonsContainer;
             _saveSystem = saveSystem;
         }
 

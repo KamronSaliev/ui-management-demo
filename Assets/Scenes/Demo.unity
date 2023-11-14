@@ -319,7 +319,6 @@ GameObject:
   - component: {fileID: 688883703}
   - component: {fileID: 688883704}
   - component: {fileID: 688883705}
-  - component: {fileID: 688883706}
   m_Layer: 5
   m_Name: TimerSpawnerView
   m_TagString: Untagged
@@ -386,22 +385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf7db2e49dc4408b2b5ae3ebecc5b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showHideButtonsContainer: {fileID: 688883706}
   _spawnButtonView: {fileID: 924872918}
   _nameMask: "\u0422\u0430\u0439\u043C\u0435\u0440 {0}"
---- !u!114 &688883706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688883702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47f90ea099f545fdbf745493c93905eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _delay: 0.01
 --- !u!1 &711615143
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +916,7 @@ MonoBehaviour:
   _timerButtonSpawnerView: {fileID: 688883705}
   _timerCallButtonPrefab: {fileID: 5279612092868439171, guid: c4e7ed51d11244e44aaddf01dec61f7e, type: 3}
   _timerView: {fileID: 167107646553023512}
+  _showHideButtonsContainerConfig: {fileID: 11400000, guid: 299887a75bbc1429898b9b5110d46d2f, type: 2}
 --- !u!1 &1982281357
 GameObject:
   m_ObjectHideFlags: 0

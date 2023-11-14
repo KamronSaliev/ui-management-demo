@@ -1,3 +1,4 @@
+using UIManagementDemo.Core.Config;
 using UIManagementDemo.Core.View;
 using UIManagementDemo.Core.ViewModel;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace UIManagementDemo.Core
         [SerializeField] private TimerSpawnerView _timerButtonSpawnerView;
         [SerializeField] private TimerCallButtonView _timerCallButtonPrefab;
         [SerializeField] private TimerView _timerView;
+        [SerializeField] private ShowHideButtonsContainerConfig _showHideButtonsContainerConfig;
 
         public override void InstallBindings()
         {
@@ -27,6 +29,9 @@ namespace UIManagementDemo.Core
             Container.BindFactory<TimerCallButtonView, TimerCallButtonView.Factory>()
                 .FromComponentInNewPrefab(_timerCallButtonPrefab)
                 .UnderTransform(_timerButtonSpawnerView.transform);
+
+            Container.BindInstance(_showHideButtonsContainerConfig).AsSingle();
+            Container.BindInterfacesAndSelfTo<ShowHideButtonsContainer>().AsSingle();
         }
     }
 }
