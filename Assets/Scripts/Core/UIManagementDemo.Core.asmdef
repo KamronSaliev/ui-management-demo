@@ -1,0 +1,23 @@
+{
+    "name": "UIManagementDemo.Core",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:029c1c1b674aaae47a6841a0b89ad80e",
+        "GUID:6c8e0ac0e43034fea930d842f518d820",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:0ea01381bc9fb4cd2b1a6f5462d31ac0",
+        "GUID:4418a3e481f4146e99d59bbb4b9b4a38"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,18 @@
+{
+    "name": "UIManagementDemo.SaveSystem.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0ea01381bc9fb4cd2b1a6f5462d31ac0"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
