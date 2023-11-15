@@ -3,10 +3,8 @@ using UIManagementDemo.Core.ViewModel.Interfaces;
 using UIManagementDemo.SaveSystem;
 using UniRx;
 using UnityEngine;
-using Utilities.ExtensionMethods;
 using Utilities.ExtensionMethods.RX;
 using Zenject;
-using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Core.ViewModel
 {
@@ -61,8 +59,6 @@ namespace UIManagementDemo.Core.ViewModel
         {
             _state.Value = true;
             _showHideButtonsContainer.Show();
-
-            Logger.DebugLog(this, $"Timer {Id} Started: {TimeSpan.FromSeconds(_time.Value).ToHoursMinutesSeconds()}");
         }
 
         private void OnBackButtonClicked(Unit unit)
@@ -126,8 +122,6 @@ namespace UIManagementDemo.Core.ViewModel
             }
 
             ChangeState(false);
-            
-            Logger.DebugLog(this, $"Timer {Id} Expired");
         }
 
         private void ChangeTimeByDelta(int delta)
@@ -139,8 +133,6 @@ namespace UIManagementDemo.Core.ViewModel
         private void ChangeState(bool state)
         {
             _state.Value = state;
-            
-            Logger.DebugLog(this, $"Timer {Id} State: {state}");
         }
 
         private void ResetTime()

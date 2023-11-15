@@ -51,7 +51,6 @@ namespace UIManagementDemo.Core.ViewModel
             _showHideButtonsContainer.Hide();
             _timerView.ShowHideTimer.Show().Forget();
             _timerView.ChangeViewModel(_timerViewModel);
-            Logger.DebugLog(this, $"ChangeViewModel to {_timerViewModel.Id}");
         }
 
         private void OnButtonNameChanged(string buttonName)
