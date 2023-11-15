@@ -1,6 +1,8 @@
 using UIManagementDemo.Core.Config;
+using UIManagementDemo.Core.Model;
 using UIManagementDemo.Core.View;
 using UIManagementDemo.Core.ViewModel;
+using UIManagementDemo.SaveSystem;
 using UnityEngine;
 using Zenject;
 
@@ -29,6 +31,9 @@ namespace UIManagementDemo.Core
             Container.BindFactory<CallButtonView, CallButtonView.Factory>()
                 .FromComponentInNewPrefab(_callButtonPrefab)
                 .UnderTransform(_callButtonViewsContainer);
+
+            Container.BindFactory<CallButtonOptions, CallButtonViewModel, CallButtonViewModel.Factory>();
+            Container.BindFactory<TimerData, TimerViewModel, TimerViewModel.Factory>();
         }
     }
 }
