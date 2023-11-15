@@ -2,7 +2,6 @@ using System;
 using UIManagementDemo.Core.ViewModel.Interfaces;
 using UIManagementDemo.SaveSystem;
 using UniRx;
-using UnityEngine;
 using Utilities.ExtensionMethods.RX;
 using Zenject;
 
@@ -126,7 +125,7 @@ namespace UIManagementDemo.Core.ViewModel
 
         private void ChangeTimeByDelta(int delta)
         {
-            var newValue = Mathf.Max(0.0f, _time.Value + delta);
+            var newValue = Math.Max(0.0f, _time.Value + delta);
             _time.Value = (int)newValue;
         }
 
@@ -138,6 +137,10 @@ namespace UIManagementDemo.Core.ViewModel
         private void ResetTime()
         {
             _time.Value = 0;
+        }
+
+        public class Factory : PlaceholderFactory<TimerData, TimerViewModel>
+        {
         }
     }
 }

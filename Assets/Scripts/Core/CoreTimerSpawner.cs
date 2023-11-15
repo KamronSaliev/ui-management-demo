@@ -15,9 +15,10 @@ namespace UIManagementDemo.Core
     {
         public Dictionary<int, SpawnableTimerDataWrapper> Timers { get; } = new();
 
-        private CallButtonView.Factory _timerCallButtonViewFactory;
+        private TimerViewModel.Factory _timerViewModelFactory;
+        private CallButtonViewModel.Factory _callButtonViewModelFactory;
+        private CallButtonView.Factory _callButtonViewFactory;
         private ISpawnButtonView _spawnButtonView;
-        private ITimerView _timerView;
         private IShowHideButtonsContainer _showHideButtonsContainer;
         private ISaveSystem _saveSystem;
 
@@ -29,15 +30,17 @@ namespace UIManagementDemo.Core
         [Inject]
         public void Construct
         (
-            CallButtonView.Factory timerCallButtonViewFactory,
-            ITimerView timerView,
+            TimerViewModel.Factory timerViewModelFactory,
+            CallButtonViewModel.Factory callButtonViewModelFactory,
+            CallButtonView.Factory callButtonViewFactory,
             ISpawnButtonView spawnButtonView,
             IShowHideButtonsContainer showHideButtonsContainer,
             ISaveSystem saveSystem
         )
         {
-            _timerCallButtonViewFactory = timerCallButtonViewFactory;
-            _timerView = timerView;
+            _timerViewModelFactory = timerViewModelFactory;
+            _callButtonViewModelFactory = callButtonViewModelFactory;
+            _callButtonViewFactory = callButtonViewFactory;
             _spawnButtonView = spawnButtonView;
             _showHideButtonsContainer = showHideButtonsContainer;
             _saveSystem = saveSystem;
@@ -62,10 +65,10 @@ namespace UIManagementDemo.Core
             var currentId = Timers.Count;
             Spawn(currentId + 1);
         }
-        
+
         private void Spawn(int id)
         {
-            var callButtonView = _timerCallButtonViewFactory.Create();
+            var callButtonView = _callButtonViewFactory.Create();
             var wrapper = GetOrCreateTimerDataWrapper(id);
             callButtonView.BindTo(wrapper.CallButtonViewModel);
             _showHideButtonsContainer.Add(callButtonView.ShowHideButton, true);
@@ -82,12 +85,7 @@ namespace UIManagementDemo.Core
             var timerViewModel = CreateTimerViewModel(timerData);
             var callButtonViewModel = CreateCallButtonViewModel(timerViewModel);
 
-            wrapper = new SpawnableTimerDataWrapper
-            {
-                TimerViewModel = timerViewModel,
-                CallButtonViewModel = callButtonViewModel
-            };
-
+            wrapper = new SpawnableTimerDataWrapper(timerViewModel, callButtonViewModel);
             Timers.Add(id, wrapper);
 
             return wrapper;
@@ -95,24 +93,15 @@ namespace UIManagementDemo.Core
 
         private CallButtonViewModel CreateCallButtonViewModel(TimerViewModel timerViewModel)
         {
-            var callButtonViewModel = new CallButtonViewModel
-            (
-                string.Format(NameMask, timerViewModel.Id),
-                timerViewModel,
-                _timerView,
-                _showHideButtonsContainer
-            );
+            var callButtonOptions = new CallButtonOptions(string.Format(NameMask, timerViewModel.Id), timerViewModel);
+            var callButtonViewModel = _callButtonViewModelFactory.Create(callButtonOptions);
             callButtonViewModel.Initialize();
             return callButtonViewModel;
         }
 
         private TimerViewModel CreateTimerViewModel(TimerData timerData)
         {
-            var timerViewModel = new TimerViewModel
-            (
-                timerData,
-                _showHideButtonsContainer
-            );
+            var timerViewModel = _timerViewModelFactory.Create(timerData);
             timerViewModel.Initialize();
             return timerViewModel;
         }

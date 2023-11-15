@@ -4,7 +4,13 @@ namespace UIManagementDemo.Core.Model
 {
     public class SpawnableTimerDataWrapper
     {
-        public TimerViewModel TimerViewModel { get; set; }
-        public CallButtonViewModel CallButtonViewModel { get; set; }
+        public readonly TimerViewModel TimerViewModel;
+        public readonly CallButtonViewModel CallButtonViewModel;
+
+        public SpawnableTimerDataWrapper(TimerViewModel timerViewModel, CallButtonViewModel callButtonViewModel)
+        {
+            TimerViewModel = timerViewModel;
+            CallButtonViewModel = callButtonViewModel;
+        }
     }
 }
