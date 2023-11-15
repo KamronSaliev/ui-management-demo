@@ -1,8 +1,9 @@
 using System;
-using Cysharp.Threading.Tasks;
-using UIManagementDemo.Core.Model;
-using UIManagementDemo.Core.View;
+using UIManagementDemo.Core.ViewModel.Interfaces;
+using UIManagementDemo.SaveSystem;
 using UniRx;
+using UnityEngine;
+using Utilities.ExtensionMethods;
 using Utilities.ExtensionMethods.RX;
 using Zenject;
 using Logger = Utilities.Logger;
@@ -11,173 +12,140 @@ namespace UIManagementDemo.Core.ViewModel
 {
     public class TimerViewModel : DisposableObject, IInitializable
     {
+        public int Id => _timerData.Id;
+        public IReadOnlyReactiveProperty<int> Time => _time;
+        public IReadOnlyReactiveProperty<bool> State => _state;
         public ReactiveCommand StartClickCommand { get; } = new();
         public ReactiveCommand BackClickCommand { get; } = new();
-        public ReactiveCommand IncreaseCommand { get; } = new();
-        public ReactiveCommand DecreaseCommand { get; } = new();
         public ReactiveCommand StopClickCommand { get; } = new();
         public ReactiveCommand ResetClickCommand { get; } = new();
+        public ReactiveCommand IncreaseCommand { get; } = new();
+        public ReactiveCommand DecreaseCommand { get; } = new();
 
         private readonly ReactiveProperty<int> _time = new();
-        public IReadOnlyReactiveProperty<int> Time => _time.ToReadOnlyReactiveProperty();
+        private readonly ReactiveProperty<bool> _state = new();
 
-        private readonly int _id;
-        private readonly TimerSpawnerView _timerSpawnerView;
-        private readonly CallButtonViewModel _callButtonViewModel;
-        private readonly TimerView _timerView;
-        private readonly TimerModel _model;
+        private readonly TimerData _timerData;
+        private readonly IShowHideButtonsContainer _showHideButtonsContainer;
 
         private const int DefaultTimeSpan = 1;
 
         public TimerViewModel
         (
-            int id,
-            TimerSpawnerView timerSpawnerView,
-            CallButtonViewModel callButtonViewModel,
-            TimerView timerView,
-            TimerModel model
+            TimerData timerData,
+            IShowHideButtonsContainer showHideButtonsContainer
         )
         {
-            _id = id;
-            _timerSpawnerView = timerSpawnerView;
-            _callButtonViewModel = callButtonViewModel;
-            _timerView = timerView;
-            _model = model;
+            _timerData = timerData;
+            _showHideButtonsContainer = showHideButtonsContainer;
         }
 
         public void Initialize()
         {
-            Logger.DebugLog(this, $"Initialize Timer{_id}");
+            _time.Value = _timerData.Time;
+            _state.Value = _timerData.State;
 
-            StartClickCommand
-                .Subscribe(OnStartClick)
-                .AddTo(this);
-
-            BackClickCommand
-                .Subscribe(OnBackClick)
-                .AddTo(this);
-
-            IncreaseCommand
-                .Subscribe(OnIncrease)
-                .AddTo(this);
-
-            DecreaseCommand
-                .Subscribe(OnDecrease)
-                .AddTo(this);
-
-            StopClickCommand
-                .Subscribe(OnStopClick)
-                .AddTo(this);
-
-            ResetClickCommand
-                .Subscribe(OnResetClick)
-                .AddTo(this);
+            StartClickCommand.Subscribe(OnStartButtonClicked).AddTo(this);
+            BackClickCommand.Subscribe(OnBackButtonClicked).AddTo(this);
+            StopClickCommand.Subscribe(OnStopButtonClicked).AddTo(this);
+            ResetClickCommand.Subscribe(OnResetButtonClicked).AddTo(this);
+            IncreaseCommand.Subscribe(OnIncreaseButtonClicked).AddTo(this);
+            DecreaseCommand.Subscribe(OnDecreaseButtonClicked).AddTo(this);
 
             Observable.Interval(TimeSpan.FromSeconds(DefaultTimeSpan))
                 .Subscribe(_ => { OnEveryTimerTick(); })
                 .AddTo(this);
-
-            _time.Value = _model.Time;
         }
 
-        private void OnStartClick(Unit unit)
+        private void OnStartButtonClicked(Unit unit)
         {
-            Logger.DebugLogWarning(this, $"Start Timer{_id}");
+            _state.Value = true;
+            _showHideButtonsContainer.Show();
 
-            if (_model.Time == 0)
-            {
-                Logger.DebugLogError(this, "Cannot start with Time: 00:00:00");
-                return;
-            }
-
-            _model.UpdateState(true);
-            _timerView.ShowHideTimer.Hide().Forget();
-            _timerSpawnerView.Show();
-            _callButtonViewModel.MakeActive();
+            Logger.DebugLog(this, $"Timer {Id} Started: {TimeSpan.FromSeconds(_time.Value).ToHoursMinutesSeconds()}");
         }
 
-        private void OnBackClick(Unit unit)
+        private void OnBackButtonClicked(Unit unit)
         {
-            Logger.DebugLog(this, $"Back Timer{_id}");
-
-            _timerView.ShowHideTimer.Hide().Forget();
-            _timerSpawnerView.Show();
+            _showHideButtonsContainer.Show();
         }
 
-        private void OnIncrease(Unit unit)
+        private void OnStopButtonClicked(Unit unit)
         {
-            Logger.DebugLog(this, $"Increase Called for Timer{_id}");
+            ChangeState(false);
+        }
 
+        private void OnResetButtonClicked(Unit unit)
+        {
+            ChangeState(false);
+            ResetTime();
+        }
+
+        private void OnIncreaseButtonClicked(Unit unit)
+        {
             if (!CanIncrease())
             {
                 return;
             }
 
-            _model.UpdateTime(DefaultTimeSpan);
-            _time.Value = _model.Time;
-
-            Logger.DebugLog(this, $"Increased Timer{_id} {_model.Time}");
+            ChangeTimeByDelta(DefaultTimeSpan);
         }
 
-        private void OnDecrease(Unit unit)
+        private void OnDecreaseButtonClicked(Unit unit)
         {
-            Logger.DebugLog(this, $"Decrease Called for Timer{_id}");
-
             if (!CanDecrease())
             {
                 return;
             }
 
-            _model.UpdateTime(-DefaultTimeSpan);
-            _time.Value = _model.Time;
-
-            Logger.DebugLog(this, $"Decreased Timer{_id} {_model.Time}");
+            ChangeTimeByDelta(-DefaultTimeSpan);
         }
 
         public bool CanIncrease()
         {
-            return _model.Time < int.MaxValue;
+            return _time.Value < int.MaxValue;
         }
 
         public bool CanDecrease()
         {
-            return _model.Time > int.MinValue;
-        }
-
-        private void OnStopClick(Unit unit)
-        {
-            Logger.DebugLog(this, $"Stop Timer{_id}");
-
-            _model.UpdateState(false);
-            _callButtonViewModel.MakeInactive();
-        }
-
-        private void OnResetClick(Unit unit)
-        {
-            Logger.DebugLog(this, $"Reset Timer{_id}");
-
-            _model.UpdateState(false);
-            _model.ResetTime();
-            _callButtonViewModel.MakeInactive();
-            _time.Value = _model.Time;
+            return _time.Value > int.MinValue;
         }
 
         private void OnEveryTimerTick()
         {
-            if (!_model.State)
+            if (!_state.Value)
             {
                 return;
             }
 
-            _model.UpdateTime(-DefaultTimeSpan);
-            _time.Value = _model.Time;
+            ChangeTimeByDelta(-DefaultTimeSpan);
 
-            if (_model.Time == 0)
+            if (_time.Value != 0)
             {
-                Logger.DebugLogWarning(this, $"Timer{_id} Expired");
-                _model.UpdateState(false);
-                _callButtonViewModel.MakeInactive();
+                return;
             }
+
+            ChangeState(false);
+            
+            Logger.DebugLog(this, $"Timer {Id} Expired");
+        }
+
+        private void ChangeTimeByDelta(int delta)
+        {
+            var newValue = Mathf.Max(0.0f, _time.Value + delta);
+            _time.Value = (int)newValue;
+        }
+
+        private void ChangeState(bool state)
+        {
+            _state.Value = state;
+            
+            Logger.DebugLog(this, $"Timer {Id} State: {state}");
+        }
+
+        private void ResetTime()
+        {
+            _time.Value = 0;
         }
     }
 }

@@ -1,17 +1,15 @@
+using UIManagementDemo.Core.Mono;
 using UIManagementDemo.Core.ViewModel;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Core.View
 {
     public class CallButtonView : BindableView<CallButtonViewModel>
     {
         public ShowHideButton ShowHideButton => _showHideButton;
-
-        public ColorButton ColorButton => _colorButton;
 
         [SerializeField] private Button _button;
         [SerializeField] private ShowHideButton _showHideButton;
@@ -20,15 +18,34 @@ namespace UIManagementDemo.Core.View
 
         protected override void OnBind(CompositeDisposable disposables)
         {
-            Logger.DebugLog(this, "OnBind");
-
-            ViewModel.ButtonText
-                .Subscribe(text => _text.text = text)
+            ViewModel.ButtonName
+                .Subscribe(OnButtonNameChanged)
+                .AddTo(disposables);
+            
+            ViewModel.State
+                .Subscribe(OnStateChanged)
                 .AddTo(disposables);
 
             _button.OnClickAsObservable()
                 .Subscribe(_ => ViewModel.ClickCommand.Execute())
                 .AddTo(disposables);
+        }
+
+        private void OnButtonNameChanged(string buttonName)
+        {
+            _text.text = buttonName;
+        }
+        
+        private void OnStateChanged(bool state)
+        {
+            if (state)
+            {
+                _colorButton.ColorOnActive();
+            }
+            else
+            {
+                _colorButton.ColorOnInactive();
+            }
         }
 
         public class Factory : PlaceholderFactory<CallButtonView>

@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
-using UIManagementDemo.Core.Model;
-using UIManagementDemo.Core.View;
+using UIManagementDemo.Core.View.Interfaces;
+using UIManagementDemo.Core.ViewModel.Interfaces;
 using UniRx;
 using Utilities;
 using Utilities.ExtensionMethods.RX;
@@ -10,78 +10,58 @@ namespace UIManagementDemo.Core.ViewModel
 {
     public class CallButtonViewModel : DisposableObject, IInitializable
     {
+        public IReadOnlyReactiveProperty<string> ButtonName => _buttonName;
+        public IReadOnlyReactiveProperty<bool> State => _state;
         public ReactiveCommand ClickCommand { get; } = new();
+        
+        private readonly ReactiveProperty<string> _buttonName = new();
+        private readonly ReactiveProperty<bool> _state = new();
 
-        private readonly ReactiveProperty<string> _buttonText = new();
-        public IReadOnlyReactiveProperty<string> ButtonText => _buttonText.ToReadOnlyReactiveProperty();
-
-        private readonly int _id;
-        private readonly TimerSpawnerView _timerSpawnerView;
-        private readonly TimerView _timerView;
-        private readonly CallButtonView _view;
-        private readonly TimerModel _timerModel;
-        private readonly CallButtonModel _model;
+        private readonly string _name;
+        private readonly TimerViewModel _timerViewModel;
+        private readonly ITimerView _timerView;
+        private readonly IShowHideButtonsContainer _showHideButtonsContainer;
 
         public CallButtonViewModel
         (
-            int id,
-            TimerSpawnerView timerSpawnerView,
-            TimerView timerView,
-            CallButtonView view,
-            TimerModel timerModel,
-            CallButtonModel model
+            string name,
+            TimerViewModel timerViewModel,
+            ITimerView timerView,
+            IShowHideButtonsContainer showHideButtonsContainer
         )
         {
-            _id = id;
-            _timerSpawnerView = timerSpawnerView;
+            _name = name;
+            _timerViewModel = timerViewModel;
             _timerView = timerView;
-            _view = view;
-            _timerModel = timerModel;
-            _model = model;
-
-            _buttonText.Value = model.ButtonName;
+            _showHideButtonsContainer = showHideButtonsContainer;
         }
 
         public void Initialize()
         {
-            Logger.DebugLog(this, "Initialize");
+            _buttonName.Value = _name;
+            _buttonName.Subscribe(OnButtonNameChanged).AddTo(this);
 
-            ClickCommand
-                .Subscribe(OnClick)
-                .AddTo(this);
-
-            if (_timerModel.State)
-            {
-                MakeActive();
-            }
-            else
-            {
-                MakeInactive();
-            }
+            _timerViewModel.State.Subscribe(OnStateChanged).AddTo(this);
+            
+            ClickCommand.Subscribe(OnClick).AddTo(this);
         }
 
         private void OnClick(Unit unit)
         {
-            Logger.DebugLogWarning(this, $"OnClick {_model.ButtonName}");
-
-            _timerSpawnerView.Hide();
+            _showHideButtonsContainer.Hide();
             _timerView.ShowHideTimer.Show().Forget();
-
-            _timerView.ChangeViewModel(_timerSpawnerView.GetTimerViewModelById(_id)); // TODO: refactor
+            _timerView.ChangeViewModel(_timerViewModel);
+            Logger.DebugLog(this, $"ChangeViewModel to {_timerViewModel.Id}");
         }
 
-        public void MakeActive()
+        private void OnButtonNameChanged(string buttonName)
         {
-            Logger.DebugLogWarning(this, $"MakeActive {_model.ButtonName}");
-
-            _view.ColorButton.ColorOnActive();
+            _buttonName.Value = buttonName;
         }
-
-        public void MakeInactive()
+        
+        private void OnStateChanged(bool state)
         {
-            Logger.DebugLogWarning(this, $"MakeInactive {_model.ButtonName}");
-
-            _view.ColorButton.ColorOnInactive();
+            _state.Value = state;
         }
     }
 }

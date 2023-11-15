@@ -6,15 +6,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniTaskExtensions = Utilities.ExtensionMethods.UniTaskExtensions;
 
-namespace UIManagementDemo.Core.View
+namespace UIManagementDemo.Core.Mono
 {
     public class ColorButton : MonoBehaviour
     {
         [SerializeField] private Image _image;
         [SerializeField] private ColorButtonConfig _config;
-        
+
         private CancellationTokenSource _cts = new();
-        
+
         public void ColorOnActive()
         {
             UpdateColor(_config.ColorOnActive).Forget();
@@ -29,7 +29,7 @@ namespace UIManagementDemo.Core.View
         {
             UniTaskExtensions.Stop(ref _cts);
             _cts = new CancellationTokenSource();
-            
+
             await _image
                 .DOColor(color, _config.TweenDuration)
                 .SetEase(Ease.InOutSine)

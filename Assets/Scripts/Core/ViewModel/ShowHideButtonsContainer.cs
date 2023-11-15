@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UIManagementDemo.Core.Config;
-using UIManagementDemo.Core.View;
+using UIManagementDemo.Core.Mono;
+using UIManagementDemo.Core.ViewModel.Interfaces;
 using Utilities.ExtensionMethods.RX;
 
 namespace UIManagementDemo.Core.ViewModel

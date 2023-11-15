@@ -1,6 +1,6 @@
-using UIManagementDemo.Core.View;
+using UIManagementDemo.Core.Mono;
 
-namespace UIManagementDemo.Core.ViewModel
+namespace UIManagementDemo.Core.ViewModel.Interfaces
 {
     public interface IShowHideButtonsContainer
     {

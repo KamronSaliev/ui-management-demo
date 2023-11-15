@@ -3,39 +3,42 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UIManagementDemo.Core.Config;
 using UnityEngine;
+using UnityEngine.UI;
 using UniTaskExtensions = Utilities.ExtensionMethods.UniTaskExtensions;
 
-namespace UIManagementDemo.Core.View
+namespace UIManagementDemo.Core.Mono
 {
-    public class ShowHideTimer : MonoBehaviour
+    public class ShowHideButton : MonoBehaviour
     {
-        [SerializeField] private Transform _targetTransform;
+        [SerializeField] private Button _button;
         [SerializeField] private ShowHideConfig _config;
 
         private CancellationTokenSource _cts = new();
 
         private void Start()
         {
-            _targetTransform.localScale = _config.OnHideParameter;
+            _button.transform.localPosition = _config.OnHideParameter;
         }
 
         public async UniTask Show()
         {
-            await Scale(_config.OnShowParameter);
+            _button.gameObject.SetActive(true);
+            await MoveButton(_config.OnShowParameter);
         }
 
         public async UniTask Hide()
         {
-            await Scale(_config.OnHideParameter);
+            await MoveButton(_config.OnHideParameter);
+            _button.gameObject.SetActive(false);
         }
 
-        private async UniTask Scale(Vector3 scale)
+        private async UniTask MoveButton(Vector3 targetPosition)
         {
             UniTaskExtensions.Stop(ref _cts);
             _cts = new CancellationTokenSource();
 
-            await _targetTransform
-                .DOScale(scale, _config.TweenDuration)
+            await _button.transform
+                .DOLocalMove(targetPosition, _config.TweenDuration)
                 .SetEase(Ease.InOutSine)
                 .WithCancellation(_cts.Token);
         }

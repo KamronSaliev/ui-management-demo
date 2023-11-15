@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485287c142c14180aadc7d94d455ed96, type: 3}
   m_Name: TimerShowHideConfig
   m_EditorClassIdentifier: 
-  _onShowParameter: {x: 1.7, y: 1.7, z: 1}
+  _onShowParameter: {x: 1, y: 1, z: 1}
   _onHideParameter: {x: 0, y: 0, z: 0}
   _tweenDuration: 0.5

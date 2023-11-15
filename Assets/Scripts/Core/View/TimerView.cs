@@ -1,6 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UIManagementDemo.Core.Config;
+using UIManagementDemo.Core.Mono;
+using UIManagementDemo.Core.View.Interfaces;
 using UIManagementDemo.Core.ViewModel;
 using UniRx;
 using UniRx.Triggers;
@@ -12,17 +14,17 @@ using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Core.View
 {
-    public class TimerView : BindableView<TimerViewModel>
+    public class TimerView : BindableView<TimerViewModel>, ITimerView
     {
         public ShowHideTimer ShowHideTimer => _showHideTimer;
 
         [SerializeField] private Text _timerText;
         [SerializeField] private Button _startButton;
-        [SerializeField] private Button _increaseButton;
-        [SerializeField] private Button _decreaseButton;
         [SerializeField] private Button _backButton;
         [SerializeField] private Button _stopButton;
         [SerializeField] private Button _resetButton;
+        [SerializeField] private Button _increaseButton;
+        [SerializeField] private Button _decreaseButton;
 
         [SerializeField] private ShowHideTimer _showHideTimer;
         [SerializeField] private TimerControlConfig _timerControlConfig;
@@ -34,21 +36,14 @@ namespace UIManagementDemo.Core.View
 
         protected override void OnBind(CompositeDisposable disposables)
         {
-            Logger.DebugLog(this, "OnBind");
+            RemoveTriggerSubscriptions();
 
-            RemoveSubscriptions();
+            ViewModel.Time.Subscribe(OnTimeChanged).AddTo(disposables);
 
-            ViewModel.Time
-                .Subscribe(UpdateTimerText)
-                .AddTo(disposables);
-
-            _startButton.OnClickAsObservable()
-                .Subscribe(_ => ViewModel.StartClickCommand.Execute())
-                .AddTo(disposables);
-
-            _backButton.OnClickAsObservable()
-                .Subscribe(_ => ViewModel.BackClickCommand.Execute())
-                .AddTo(disposables);
+            _startButton.OnClickAsObservable().Subscribe(OnStartButtonClicked).AddTo(disposables);
+            _backButton.OnClickAsObservable().Subscribe(OnBackButtonClicked).AddTo(disposables);
+            _stopButton.OnClickAsObservable().Subscribe(OnStopButtonClicked).AddTo(disposables);
+            _resetButton.OnClickAsObservable().Subscribe(OnResetButtonClicked).AddTo(disposables);
 
             _increaseButtonSubscriptions.Add(_increaseButton.OnPointerUpAsObservable()
                 .Subscribe(_ => OnButtonPointerUp())
@@ -57,7 +52,7 @@ namespace UIManagementDemo.Core.View
                 .Subscribe(_ => OnButtonPointerClick(ViewModel.IncreaseCommand))
                 .AddTo(disposables));
             _increaseButtonSubscriptions.Add(_increaseButton.OnLongPointerDownAsObservable()
-                .Subscribe(_ => OnButtonPointerDown(() => ViewModel.CanIncrease(), ViewModel.IncreaseCommand))
+                .Subscribe(_ => OnButtonPointerDown(ViewModel.CanIncrease, ViewModel.IncreaseCommand))
                 .AddTo(this));
 
             _decreaseButtonSubscriptions.Add(_decreaseButton.OnPointerUpAsObservable()
@@ -67,21 +62,48 @@ namespace UIManagementDemo.Core.View
                 .Subscribe(_ => OnButtonPointerClick(ViewModel.DecreaseCommand))
                 .AddTo(disposables));
             _decreaseButtonSubscriptions.Add(_decreaseButton.OnLongPointerDownAsObservable()
-                .Subscribe(_ => OnButtonPointerDown(() => ViewModel.CanDecrease(), ViewModel.DecreaseCommand))
+                .Subscribe(_ => OnButtonPointerDown(ViewModel.CanDecrease, ViewModel.DecreaseCommand))
                 .AddTo(this));
-
-            _stopButton.OnClickAsObservable()
-                .Subscribe(_ => ViewModel.StopClickCommand.Execute())
-                .AddTo(disposables);
-
-            _resetButton.OnClickAsObservable()
-                .Subscribe(_ => ViewModel.ResetClickCommand.Execute())
-                .AddTo(disposables);
         }
 
-        private void UpdateTimerText(int time)
+        public void ChangeViewModel(TimerViewModel newViewModel)
+        {
+            UnbindViewModel();
+            BindTo(newViewModel);
+        }
+
+        private void OnTimeChanged(int time)
         {
             _timerText.text = TimeSpan.FromSeconds(time).ToHoursMinutesSeconds();
+        }
+
+        private void OnStartButtonClicked(Unit unit)
+        {
+            if (ViewModel.Time.Value == 0)
+            {
+                Logger.DebugLogError(this,
+                    $"Cannot start with Time: {TimeSpan.FromSeconds(0).ToHoursMinutesSeconds()}");
+                return;
+            }
+            
+            _showHideTimer.Hide().Forget();
+            ViewModel.StartClickCommand.Execute();
+        }
+
+        private void OnBackButtonClicked(Unit unit)
+        {
+            _showHideTimer.Hide().Forget();
+            ViewModel.BackClickCommand.Execute();
+        }
+        
+        private void OnStopButtonClicked(Unit unit)
+        {
+            ViewModel.StopClickCommand.Execute();
+        }
+        
+        private void OnResetButtonClicked(Unit unit)
+        {
+            ViewModel.ResetClickCommand.Execute();
         }
 
         private void OnButtonPointerUp()
@@ -115,7 +137,7 @@ namespace UIManagementDemo.Core.View
             }
         }
 
-        private void RemoveSubscriptions()
+        private void RemoveTriggerSubscriptions()
         {
             foreach (var subscription in _increaseButtonSubscriptions)
             {

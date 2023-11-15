@@ -30,13 +30,7 @@ namespace UIManagementDemo.Core.View
             return includeCurrent ? _viewModel.StartWith(ViewModel) : _viewModel;
         }
 
-        public void ChangeViewModel(TViewModel newViewModel)
-        {
-            UnbindViewModel();
-            BindTo(newViewModel);
-        }
-
-        private void UnbindViewModel()
+        public void UnbindViewModel()
         {
             _viewModel.Value = null;
             _disposables.Dispose();

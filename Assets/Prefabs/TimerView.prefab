@@ -216,11 +216,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timerText: {fileID: 2451469021224223466}
   _startButton: {fileID: 2451469022496773439}
-  _increaseButton: {fileID: 4603343742063035048}
-  _decreaseButton: {fileID: 4603343741536047248}
   _backButton: {fileID: 2518519126462207042}
   _stopButton: {fileID: 212178656304376328}
   _resetButton: {fileID: 8061678718339337620}
+  _increaseButton: {fileID: 4603343742063035048}
+  _decreaseButton: {fileID: 4603343741536047248}
   _showHideTimer: {fileID: 5714033559789218822}
   _timerControlConfig: {fileID: 11400000, guid: 1bcd83a346d5747f385f86db3abe0482, type: 2}
 --- !u!114 &5714033559789218822
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8410971751da47b586f51d2a61ab23ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetTransform: {fileID: 2451469021042864932}
+  _targetTransform: {fileID: 2451469020815141816}
   _config: {fileID: 11400000, guid: bb0ad99b0c03e4c328a9d8c827ccf473, type: 2}
 --- !u!1 &2451469021052203971
 GameObject:
@@ -618,11 +618,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -66
+      value: -65
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1235,11 +1235,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -65
+      value: -110
       objectReference: {fileID: 0}
     - target: {fileID: 2154693868697940239, guid: beadf738be0f7451d9f7832ff44b55ac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
