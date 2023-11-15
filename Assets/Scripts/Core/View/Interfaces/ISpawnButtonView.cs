@@ -4,6 +4,6 @@ namespace UIManagementDemo.Core.View.Interfaces
 {
     public interface ISpawnButtonView
     {
-        ShowHideButton ShowHideButton { get; }
+        public ShowHideButton ShowHideButton { get; }
     }
 }
