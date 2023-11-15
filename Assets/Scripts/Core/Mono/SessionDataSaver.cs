@@ -2,7 +2,6 @@ using UIManagementDemo.Core;
 using UIManagementDemo.SaveSystem;
 using UnityEngine;
 using Zenject;
-using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Mono
 {
@@ -38,8 +37,6 @@ namespace UIManagementDemo.Mono
             }
 
             _saveSystem.Save(newSaveData);
-
-            Logger.DebugLogWarning(this, "Session Data Saved");
         }
     }
 }

@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using Logger = Utilities.Logger;
 
 namespace SaveSystem.Editor
 {
@@ -10,8 +9,6 @@ namespace SaveSystem.Editor
         private static void ClearPlayerPrefs()
         {
             PlayerPrefs.DeleteAll();
-
-            Logger.DebugLogWarning(nameof(PlayerPrefsCleaner), "PlayerPrefs cleaned");
         }
     }
 }
