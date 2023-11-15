@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using UIManagementDemo.Core.Model;
+using UIManagementDemo.Core.ViewModel;
 
 namespace UIManagementDemo.Core
 {
     public interface ICoreTimerSpawner
     {
-        Dictionary<int, SpawnableTimerDataWrapper> Timers { get; }
+        Dictionary<int, TimerViewModel> Timers { get; }
         
         void Spawn();
     }

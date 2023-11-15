@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UIManagementDemo.Core.Model;
@@ -6,14 +7,13 @@ using UIManagementDemo.Core.View.Interfaces;
 using UIManagementDemo.Core.ViewModel;
 using UIManagementDemo.Core.ViewModel.Interfaces;
 using UIManagementDemo.SaveSystem;
-using UnityEngine;
 using Zenject;
 
 namespace UIManagementDemo.Core
 {
     public class CoreTimerSpawner : ICoreTimerSpawner, IInitializable
     {
-        public Dictionary<int, SpawnableTimerDataWrapper> Timers { get; } = new();
+        public Dictionary<int, TimerViewModel> Timers { get; } = new();
 
         private TimerViewModel.Factory _timerViewModelFactory;
         private CallButtonViewModel.Factory _callButtonViewModelFactory;
@@ -50,7 +50,7 @@ namespace UIManagementDemo.Core
         {
             _currentSaveData = _saveSystem.Load();
             _showHideButtonsContainer.Add(_spawnButtonView.ShowHideButton);
-            var initialCount = Mathf.Max(DefaultTimerCallButtonCount, _currentSaveData.TimerData.Count);
+            var initialCount = Math.Max(DefaultTimerCallButtonCount, _currentSaveData.TimerData.Count);
 
             for (var i = 0; i < initialCount; i++)
             {
@@ -69,26 +69,19 @@ namespace UIManagementDemo.Core
         private void Spawn(int id)
         {
             var callButtonView = _callButtonViewFactory.Create();
-            var wrapper = GetOrCreateTimerDataWrapper(id);
-            callButtonView.BindTo(wrapper.CallButtonViewModel);
+            var timerViewModel = GetOrCreateTimerViewModel(id);
+            var callButtonViewModel = CreateCallButtonViewModel(timerViewModel);
+            callButtonView.BindTo(callButtonViewModel);
             _showHideButtonsContainer.Add(callButtonView.ShowHideButton, true);
         }
 
-        private SpawnableTimerDataWrapper GetOrCreateTimerDataWrapper(int id)
+        private TimerViewModel GetOrCreateTimerViewModel(int id)
         {
-            if (Timers.TryGetValue(id, out var wrapper))
-            {
-                return wrapper;
-            }
-
             var timerData = _currentSaveData.TimerData.FirstOrDefault(t => t.Id == id) ?? new TimerData(id);
-            var timerViewModel = CreateTimerViewModel(timerData);
-            var callButtonViewModel = CreateCallButtonViewModel(timerViewModel);
-
-            wrapper = new SpawnableTimerDataWrapper(timerViewModel, callButtonViewModel);
-            Timers.Add(id, wrapper);
-
-            return wrapper;
+            var timerViewModel = _timerViewModelFactory.Create(timerData);
+            timerViewModel.Initialize();
+            Timers.Add(id, timerViewModel);
+            return timerViewModel;
         }
 
         private CallButtonViewModel CreateCallButtonViewModel(TimerViewModel timerViewModel)
@@ -97,13 +90,6 @@ namespace UIManagementDemo.Core
             var callButtonViewModel = _callButtonViewModelFactory.Create(callButtonOptions);
             callButtonViewModel.Initialize();
             return callButtonViewModel;
-        }
-
-        private TimerViewModel CreateTimerViewModel(TimerData timerData)
-        {
-            var timerViewModel = _timerViewModelFactory.Create(timerData);
-            timerViewModel.Initialize();
-            return timerViewModel;
         }
     }
 }

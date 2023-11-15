@@ -27,13 +27,7 @@ namespace UIManagementDemo.Mono
 
             foreach (var timer in _coreTimerSpawner.Timers.Values)
             {
-                newSaveData.TimerData.Add(
-                    new TimerData
-                    (
-                        timer.TimerViewModel.Id,
-                        timer.TimerViewModel.Time.Value,
-                        timer.TimerViewModel.State.Value
-                    ));
+                newSaveData.TimerData.Add(new TimerData(timer.Id, timer.Time.Value, timer.State.Value));
             }
 
             _saveSystem.Save(newSaveData);
