@@ -3,28 +3,27 @@ using UIManagementDemo.Core.ViewModel;
 using UniRx;
 using UnityEngine;
 using Zenject;
-using Logger = Utilities.Logger;
 
 namespace UIManagementDemo.Core
 {
     public class CoreBinder : MonoBehaviour
     {
-        [SerializeField] private TimerSpawnerView _timerSpawnerView;
+        [SerializeField] private SpawnButtonView _spawnButtonView;
 
-        private TimerSpawnerViewModel _timerSpawnerViewModel;
+        private SpawnButtonViewModel _spawnButtonViewModel;
 
         [Inject]
         public void Construct
         (
-            TimerSpawnerViewModel timerSpawnerViewModel
+            SpawnButtonViewModel spawnButtonViewModel
         )
         {
-            _timerSpawnerViewModel = timerSpawnerViewModel;
+            _spawnButtonViewModel = spawnButtonViewModel;
         }
 
         private void Start()
         {
-            _timerSpawnerView.BindTo(_timerSpawnerViewModel).AddTo(this);
+            _spawnButtonView.BindTo(_spawnButtonViewModel).AddTo(this);
         }
     }
 }
