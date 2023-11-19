@@ -9,10 +9,10 @@ namespace UIManagementDemo.Core.View
 {
     public class CallButtonView : BindableView<CallButtonViewModel>
     {
-        public ShowHideButton ShowHideButton => _showHideButton;
+        public ShowHideItem ShowHideItem => _showHideItem;
 
         [SerializeField] private Button _button;
-        [SerializeField] private ShowHideButton _showHideButton;
+        [SerializeField] private ShowHideItem _showHideItem;
         [SerializeField] private ColorButton _colorButton;
         [SerializeField] private Text _text;
 

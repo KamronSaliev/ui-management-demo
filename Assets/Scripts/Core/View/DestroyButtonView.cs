@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UIManagementDemo.Core.View
 {
-    public class SpawnButtonView : BindableView<SpawnButtonViewModel>
+    public class DestroyButtonView : BindableView<DestroyButtonViewModel>
     {
         [SerializeField] private Button _button;
 

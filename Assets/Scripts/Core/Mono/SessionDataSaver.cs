@@ -1,9 +1,8 @@
-using UIManagementDemo.Core;
 using UIManagementDemo.SaveSystem;
 using UnityEngine;
 using Zenject;
 
-namespace UIManagementDemo.Mono
+namespace UIManagementDemo.Core.Mono
 {
     public class SessionDataSaver : MonoBehaviour
     {
@@ -27,7 +26,12 @@ namespace UIManagementDemo.Mono
 
             foreach (var timer in _coreTimerSpawner.Timers.Values)
             {
-                newSaveData.TimerData.Add(new TimerData(timer.Id, timer.Time.Value, timer.State.Value));
+                var timerViewModel = timer.TimerViewModel;
+                newSaveData.TimerData.Add(new TimerData
+                (
+                    timerViewModel.Id, 
+                    timerViewModel.Time.Value,
+                    timerViewModel.State.Value));
             }
 
             _saveSystem.Save(newSaveData);
