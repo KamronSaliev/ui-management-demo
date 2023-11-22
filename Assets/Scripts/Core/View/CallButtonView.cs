@@ -1,3 +1,4 @@
+using TMPro;
 using UIManagementDemo.Core.Mono;
 using UIManagementDemo.Core.ViewModel;
 using UniRx;
@@ -14,7 +15,7 @@ namespace UIManagementDemo.Core.View
         [SerializeField] private Button _button;
         [SerializeField] private ShowHideItem _showHideItem;
         [SerializeField] private ColorButton _colorButton;
-        [SerializeField] private Text _text;
+        [SerializeField] private TMP_Text _text;
 
         protected override void OnBind(CompositeDisposable disposables)
         {

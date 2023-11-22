@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UIManagementDemo.Core.Model;
 using UIManagementDemo.Core.Mono.Interfaces;
 using UIManagementDemo.Core.View;
@@ -26,7 +27,8 @@ namespace UIManagementDemo.Core
         private SaveData _currentSaveData;
 
         private const int DefaultTimerCallButtonCount = 3;
-        private const string NameMask = "Таймер {0}";
+        private const string NameMask = "Timer {0}";
+        private const float InitialDelay = 0.5f;
 
         [Inject]
         public void Construct
@@ -47,18 +49,20 @@ namespace UIManagementDemo.Core
             _saveSystem = saveSystem;
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             _currentSaveData = _saveSystem.Load();
 
             _showHideButtonsContainer.Push(_controlButtonsShowHideProvider.ShowHideItem);
             var initialCount = Math.Max(DefaultTimerCallButtonCount, _currentSaveData.TimerData.Count);
 
+            await UniTask.Delay(TimeSpan.FromSeconds(InitialDelay));
+            
             for (var i = 0; i < initialCount; i++)
             {
                 Spawn(i + 1);
             }
-
+            
             _showHideButtonsContainer.Show();
         }
 
@@ -66,17 +70,6 @@ namespace UIManagementDemo.Core
         {
             var currentId = Timers.Count;
             Spawn(currentId + 1);
-        }
-
-        public void Destroy()
-        {
-            if (Timers.Count == 0)
-            {
-                return;
-            }
-
-            var lastId = Timers.Count;
-            Destroy(lastId);
         }
 
         private void Spawn(int id)
@@ -89,14 +82,20 @@ namespace UIManagementDemo.Core
             _showHideButtonsContainer.Push(callButtonView.ShowHideItem, true);
         }
 
-        private void Destroy(int id)
+        public void Destroy()
         {
-            var timerWrapper = Timers.GetValueOrDefault(id);
+            if (Timers.Count == 0)
+            {
+                return;
+            }
+            
+            var lastId = Timers.Count;
+            _showHideButtonsContainer.Pop();
+            var timerWrapper = Timers.GetValueOrDefault(lastId);
             Object.Destroy(timerWrapper.CallButtonView.gameObject);
             timerWrapper.CallButtonViewModel.Dispose();
             timerWrapper.TimerViewModel.Dispose();
-            Timers.Remove(id);
-            _showHideButtonsContainer.Pop();
+            Timers.Remove(lastId);
         }
 
         private TimerViewModel GetOrCreateTimerViewModel(int id)

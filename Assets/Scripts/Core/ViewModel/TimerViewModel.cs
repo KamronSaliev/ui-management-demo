@@ -10,15 +10,16 @@ namespace UIManagementDemo.Core.ViewModel
     public class TimerViewModel : DisposableObject, IInitializable
     {
         public int Id => _timerData.Id;
+        public IReadOnlyReactiveProperty<string> Name => _name;
         public IReadOnlyReactiveProperty<int> Time => _time;
         public IReadOnlyReactiveProperty<bool> State => _state;
         public ReactiveCommand StartClickCommand { get; } = new();
         public ReactiveCommand BackClickCommand { get; } = new();
-        public ReactiveCommand StopClickCommand { get; } = new();
         public ReactiveCommand ResetClickCommand { get; } = new();
         public ReactiveCommand IncreaseCommand { get; } = new();
         public ReactiveCommand DecreaseCommand { get; } = new();
 
+        private readonly ReactiveProperty<string> _name = new();
         private readonly ReactiveProperty<int> _time = new();
         private readonly ReactiveProperty<bool> _state = new();
 
@@ -39,12 +40,12 @@ namespace UIManagementDemo.Core.ViewModel
 
         public void Initialize()
         {
+            _name.Value = $"Timer {Id}";
             _time.Value = _timerData.Time;
             _state.Value = _timerData.State;
 
             StartClickCommand.Subscribe(OnStartButtonClicked).AddTo(this);
             BackClickCommand.Subscribe(OnBackButtonClicked).AddTo(this);
-            StopClickCommand.Subscribe(OnStopButtonClicked).AddTo(this);
             ResetClickCommand.Subscribe(OnResetButtonClicked).AddTo(this);
             IncreaseCommand.Subscribe(OnIncreaseButtonClicked).AddTo(this);
             DecreaseCommand.Subscribe(OnDecreaseButtonClicked).AddTo(this);
@@ -56,18 +57,12 @@ namespace UIManagementDemo.Core.ViewModel
 
         private void OnStartButtonClicked(Unit unit)
         {
-            _state.Value = true;
-            _showHideButtonsContainer.Show();
+            ChangeState(!_state.Value);
         }
 
         private void OnBackButtonClicked(Unit unit)
         {
             _showHideButtonsContainer.Show();
-        }
-
-        private void OnStopButtonClicked(Unit unit)
-        {
-            ChangeState(false);
         }
 
         private void OnResetButtonClicked(Unit unit)

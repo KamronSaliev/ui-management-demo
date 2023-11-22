@@ -12,7 +12,7 @@ namespace UIManagementDemo.Core.ViewModel
     {
         private readonly ShowHideButtonsContainerConfig _config;
 
-        private readonly Stack<ShowHideItem> _buttons = new();
+        private readonly List<ShowHideItem> _buttons = new();
 
         public ShowHideButtonsContainer(ShowHideButtonsContainerConfig config)
         {
@@ -21,7 +21,7 @@ namespace UIManagementDemo.Core.ViewModel
 
         public void Push(ShowHideItem item, bool show = false)
         {
-            _buttons.Push(item);
+            _buttons.Add(item);
 
             if (show)
             {
@@ -29,9 +29,11 @@ namespace UIManagementDemo.Core.ViewModel
             }
         }
 
-        public void Pop()
+        public async void Pop()
         {
-            _buttons.Pop();
+            var peek = _buttons[^1];
+            await peek.Hide();
+            _buttons.Remove(peek);
         }
 
         public async void Show()
