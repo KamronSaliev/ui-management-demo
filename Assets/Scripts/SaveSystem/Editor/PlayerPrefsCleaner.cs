@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SaveSystem.Editor
+namespace UIManagementDemo.SaveSystem.Editor
 {
     public class PlayerPrefsCleaner : UnityEditor.Editor
     {

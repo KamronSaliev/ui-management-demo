@@ -1,5 +1,6 @@
 using UIManagementDemo.Core.Config;
 using UIManagementDemo.Core.Model;
+using UIManagementDemo.Core.Mono;
 using UIManagementDemo.Core.View;
 using UIManagementDemo.Core.ViewModel;
 using UIManagementDemo.SaveSystem;
@@ -12,7 +13,9 @@ namespace UIManagementDemo.Core
     {
         [SerializeField] private Transform _callButtonViewsContainer;
         [SerializeField] private CallButtonView _callButtonPrefab;
+        [SerializeField] private ControlButtonsShowHideProvider _controlButtonsShowHideProvider;
         [SerializeField] private SpawnButtonView _spawnButtonView;
+        [SerializeField] private DestroyButtonView _destroyButtonView;
         [SerializeField] private TimerView _timerView;
         [SerializeField] private ShowHideButtonsContainerConfig _showHideButtonsContainerConfig;
         
@@ -20,8 +23,13 @@ namespace UIManagementDemo.Core
         {
             Container.BindInterfacesAndSelfTo<CoreTimerSpawner>().AsSingle();
 
+            Container.BindInterfacesAndSelfTo<ControlButtonsShowHideProvider>().FromInstance(_controlButtonsShowHideProvider).AsSingle();
+
             Container.BindInterfacesAndSelfTo<SpawnButtonViewModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<SpawnButtonView>().FromInstance(_spawnButtonView).AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<DestroyButtonViewModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DestroyButtonView>().FromInstance(_destroyButtonView).AsSingle();
 
             Container.BindInterfacesAndSelfTo<TimerView>().FromInstance(_timerView).AsSingle();
 

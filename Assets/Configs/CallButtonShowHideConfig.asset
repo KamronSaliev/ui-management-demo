@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CallButtonShowHideConfig
   m_EditorClassIdentifier: 
   _onShowParameter: {x: 0, y: 0, z: 0}
-  _onHideParameter: {x: -700, y: 0, z: 0}
+  _onHideParameter: {x: -550, y: 0, z: 0}
   _tweenDuration: 0.5

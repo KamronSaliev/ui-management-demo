@@ -4,7 +4,9 @@ namespace UIManagementDemo.Core.ViewModel.Interfaces
 {
     public interface IShowHideButtonsContainer
     {
-        void Add(ShowHideButton button, bool show = false);
+        void Push(ShowHideItem item, bool show = false);
+
+        void Pop();
 
         void Show();
 

@@ -12,21 +12,28 @@ namespace UIManagementDemo.Core.ViewModel
     {
         private readonly ShowHideButtonsContainerConfig _config;
 
-        private readonly List<ShowHideButton> _buttons = new();
+        private readonly List<ShowHideItem> _buttons = new();
 
         public ShowHideButtonsContainer(ShowHideButtonsContainerConfig config)
         {
             _config = config;
         }
 
-        public void Add(ShowHideButton button, bool show = false)
+        public void Push(ShowHideItem item, bool show = false)
         {
-            _buttons.Add(button);
+            _buttons.Add(item);
 
             if (show)
             {
-                button.Show().Forget();
+                item.Show().Forget();
             }
+        }
+
+        public async void Pop()
+        {
+            var peek = _buttons[^1];
+            await peek.Hide();
+            _buttons.Remove(peek);
         }
 
         public async void Show()

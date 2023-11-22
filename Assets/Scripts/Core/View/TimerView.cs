@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UIManagementDemo.Core.Config;
 using UIManagementDemo.Core.Mono;
 using UIManagementDemo.Core.View.Interfaces;
@@ -18,10 +19,11 @@ namespace UIManagementDemo.Core.View
     {
         public ShowHideTimer ShowHideTimer => _showHideTimer;
 
-        [SerializeField] private Text _timerText;
+        [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private TMP_Text _labelText;
+        [SerializeField] private TMP_Text _startButtonText;
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _backButton;
-        [SerializeField] private Button _stopButton;
         [SerializeField] private Button _resetButton;
         [SerializeField] private Button _increaseButton;
         [SerializeField] private Button _decreaseButton;
@@ -32,17 +34,21 @@ namespace UIManagementDemo.Core.View
         private readonly CompositeDisposable _increaseButtonSubscriptions = new();
         private readonly CompositeDisposable _decreaseButtonSubscriptions = new();
 
+        private const string StartButtonTextDefault = "start";
+        private const string StartButtonTextOnPause = "pause";
+
         private bool _isPointerDownActive;
 
         protected override void OnBind(CompositeDisposable disposables)
         {
             RemoveTriggerSubscriptions();
 
+            ViewModel.Name.Subscribe(OnNameChanged).AddTo(disposables);
             ViewModel.Time.Subscribe(OnTimeChanged).AddTo(disposables);
+            ViewModel.State.Subscribe(OnStateChanged).AddTo(disposables);
 
             _startButton.OnClickAsObservable().Subscribe(OnStartButtonClicked).AddTo(disposables);
             _backButton.OnClickAsObservable().Subscribe(OnBackButtonClicked).AddTo(disposables);
-            _stopButton.OnClickAsObservable().Subscribe(OnStopButtonClicked).AddTo(disposables);
             _resetButton.OnClickAsObservable().Subscribe(OnResetButtonClicked).AddTo(disposables);
 
             _increaseButtonSubscriptions.Add(_increaseButton.OnPointerUpAsObservable()
@@ -71,10 +77,20 @@ namespace UIManagementDemo.Core.View
             UnbindViewModel();
             BindTo(newViewModel);
         }
+        
+        private void OnNameChanged(string newName)
+        {
+            _labelText.text = newName;
+        }
 
         private void OnTimeChanged(int time)
         {
             _timerText.text = TimeSpan.FromSeconds(time).ToHoursMinutesSeconds();
+        }
+
+        private void OnStateChanged(bool state)
+        {
+            _startButtonText.text = state ? StartButtonTextOnPause : StartButtonTextDefault;
         }
 
         private void OnStartButtonClicked(Unit unit)
@@ -85,8 +101,7 @@ namespace UIManagementDemo.Core.View
                     $"Cannot start with Time: {TimeSpan.FromSeconds(0).ToHoursMinutesSeconds()}");
                 return;
             }
-            
-            _showHideTimer.Hide().Forget();
+
             ViewModel.StartClickCommand.Execute();
         }
 
@@ -95,12 +110,7 @@ namespace UIManagementDemo.Core.View
             _showHideTimer.Hide().Forget();
             ViewModel.BackClickCommand.Execute();
         }
-        
-        private void OnStopButtonClicked(Unit unit)
-        {
-            ViewModel.StopClickCommand.Execute();
-        }
-        
+
         private void OnResetButtonClicked(Unit unit)
         {
             ViewModel.ResetClickCommand.Execute();
