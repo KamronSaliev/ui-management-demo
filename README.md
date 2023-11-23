@@ -15,7 +15,7 @@ This project presents a simple timer management demo, showcasing the implementat
 
 ## Media
 <p align="center">
-  <img width="480" alt="Menu" src="https://github.com/KamronSaliev/ui-management-demo/assets/39851011/8eb843a7-d509-4237-a892-da4ece256f16">
+  <img width="360" alt="Menu" src="https://github.com/KamronSaliev/ui-management-demo/assets/39851011/8eb843a7-d509-4237-a892-da4ece256f16">
   &nbsp
-  <img width="480" alt="Timer" src="https://github.com/KamronSaliev/ui-management-demo/assets/39851011/67ae23ef-a240-4099-808e-200365289b1a">
+  <img width="360" alt="Timer" src="https://github.com/KamronSaliev/ui-management-demo/assets/39851011/67ae23ef-a240-4099-808e-200365289b1a">
 </p>
