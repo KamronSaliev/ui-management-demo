@@ -15,6 +15,11 @@ namespace UIManagementDemo.Core.Mono
 
         private CancellationTokenSource _cts = new();
 
+        private void OnDestroy()
+        {
+            UniTaskExtensions.Stop(ref _cts);
+        }
+        
         public void ColorOnActive()
         {
             UpdateColor(_config.ColorOnActive).Forget();

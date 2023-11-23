@@ -5,8 +5,10 @@ namespace UIManagementDemo.Core
 {
     public interface ICoreTimerSpawner
     {
-        Dictionary<int, SpawnableTimerDataWrapper> Timers { get; }
-        
+        Dictionary<int, TimerWrapper> Timers { get; }
+
         void Spawn();
+
+        void Destroy();
     }
 }
