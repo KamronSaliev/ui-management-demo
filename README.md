@@ -1,4 +1,4 @@
-# ⏰ UI Management Demo (Timer App)
+# ⏰ UI Management Demo (Timers App)
 
 ## Introduction
 This project presents a simple timer management demo, showcasing the implementation of the Model-View-ViewModel (MVVM) pattern in a Unity3D Engine environment. Leveraging the power of Zenject for dependency injection, UniRx for reactive programming, and UniTask for efficient task management, this demo serves as an educational project for Unity developers interested in UI management techniques using MV* patterns.
