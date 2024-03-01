@@ -11,7 +11,7 @@ This project presents a simple timer management demo, showcasing the implementat
 - Reactive UI updates using UniRx.
 - Efficient task handling with UniTask.
 - Clean and maintainable code structure following MVVM pattern.
-- Dependency injection using Zenject.
+- Dependency injection using Zenject
 
 ## Media
 <p align="center">
