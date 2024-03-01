@@ -7,10 +7,10 @@ This project presents a simple timer management demo, showcasing the implementat
 `Unity` `C#` `Zenject` `UniTask` `UniRx`
 
 ## Features
-- Timer functionality with start, stop, and reset features.
-- Reactive UI updates using UniRx.
-- Efficient task handling with UniTask.
-- Clean and maintainable code structure following MVVM pattern.
+- Timer functionality with start, stop, and reset features
+- Reactive UI updates using UniRx
+- Efficient task handling with UniTask
+- Clean and maintainable code structure following MVVM pattern
 - Dependency injection using Zenject
 
 ## Media
